@@ -1,11 +1,11 @@
 class RulesBook:
     def __init__(self):
-        self.rules = [[None for _ in range(4)] for _ in range(33)]
+        self.rules = [0 for _ in range(8)] 
 
     def get_rules(self) -> list:
-        print("Retrieving rules...")
         return self.rules
     
-    def set_rules(self, new_rules: list):
+    def set_rules(self, new_rules: list, col: int):
         print("Setting new rules...")
-        self.rules = new_rules
+        self.rules[col] = new_rules
+        print(self.get_rules())

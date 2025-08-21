@@ -1,49 +1,67 @@
 from tkinter import *
 import RulesBook
+import Cells
 
-def change_color(button: Button):
-    """Change the color of the button when clicked."""
-    current_color = button.cget("bg")
-    new_color = "black" if current_color == "white" else "white"
-    button.config(bg=new_color)
-
-
-def create_gui():
+def create_gui(rules, max_rows: int, max_cols: int):
     """Create and run the GUI application"""
     master = Tk()
     master.geometry("600x600")
     master.title("Main Window")
-    #make grid in main window
-    display = Frame(master)
-    display.grid(row=0, column=0, columnspan=4, sticky="ew", padx=5, pady=5)
-    
-    for i in range(14):
+
+    # Top frame (menu bar area)
+    top_frame = Frame(master)
+    top_frame.pack(side="top", fill="x")
+
+    # Place your grid inside the top_frame
+    for i in range(4):
         for j in range(33):
             if is_part_of_rules(i, j):
-                if i == 1: #in this case, the square will be either white or black but non-interactable
+                if i == 1:
                     square_color = determine_square_color(j)
-                    square = Frame(master, bg=square_color)
-                    square.grid(row=i, column=j, sticky="nsew")
-                if i == 2: #in this case the user can choose if the square will be white or black
-                    button = Button(master, text="", bg="white")
-                    button.config(command=lambda b=button: change_color(b))
+                    control_square = Frame(top_frame, bg=square_color, width=18, height=18)
+                    control_square.grid(row=i, column=j, sticky="nsew")
+                if i == 2:
+                    button = Button(top_frame, text="", bg="white", width=2, height=1)
+                    button.config(command=lambda b=button: change_color_of_rules_square(b, rules))
                     button.grid(row=i, column=j, sticky="nsew")
             else:
-                label = Label(master, text=f"", bg="grey")
+                label = Label(top_frame, text=f"", bg="grey", width=2, height=1)
                 label.grid(row=i, column=j, sticky="nsew")
 
+    # Add a row for the start button
+    start_button = Button(top_frame, text="Start!", bg="green")
+    start_button.grid(row=4, column=0, columnspan=33, sticky="nsew")
 
     # Make cells expand with window
-    for i in range(14):
-        master.rowconfigure(i, weight=1)
+    for i in range(5):
+        top_frame.rowconfigure(i, weight=1)
     for j in range(33):
-        master.columnconfigure(j, weight=1)
+        top_frame.columnconfigure(j, weight=1)
+
+    # Bottom frame for grid
+    bottom_frame = Frame(master)
+    bottom_frame.pack(side="top", fill="both", expand=True)
+
+    # Store references to squares in a 2D list
+    bottom_squares = []
+    for i in range(max_rows):
+        row = []
+        for j in range(max_cols):
+            square = Frame(bottom_frame, bg="white", width=18, height=18, borderwidth=1, relief="solid")
+            square.grid(row=i, column=j, sticky="nsew")
+            # Bind click event for first row
+            if i == 0:
+                square.bind("<Button-1>", lambda event, b=square: change_color_of_cell(b))
+            row.append(square)
+        bottom_squares.append(row)
+
+    cells = Cells.Cells(bottom_squares, max_cols, max_rows)
+    start_button.config(command=lambda: cells.start_simulation(rules.get_rules()))
 
     master.mainloop()
 
 # Init the rules for the cellular automata
 # The rules can be customized when the user clicks on the corresponding button in the grid
-
 def determine_square_color(col: int) -> str:
     """Determine the color of the square based on its position."""
     list_of_black_squares = [5, 10, 13, 14, 19, 21, 23, 25, 26, 29, 30, 31]
@@ -51,6 +69,7 @@ def determine_square_color(col: int) -> str:
         return "black"
     return "white"
 
+# Check if the cell needs to be a button or part of the rule squares
 def is_part_of_rules(row: int, col: int) -> bool:
     if row == 0 or row == 3:
         return False
@@ -60,9 +79,28 @@ def is_part_of_rules(row: int, col: int) -> bool:
         return True
     return False
 
+def change_color_of_rules_square(button: Button, rules: RulesBook.RulesBook):
+    """Change the color of the button when clicked."""
+    current_color = button.cget("bg")
+    new_color = "black" if current_color == "white" else "white"
+    button.config(bg=new_color)
+    col = (int) ((button.grid_info()["column"]-2)/4)
+    #set rules to be 1 if black or 0 if white
+    rules.set_rules(1 if new_color == "black" else 0, col)  # Update rules with the new color
+
+def change_color_of_cell(button: Button):
+    """Change the color of the cell when clicked."""
+    current_color = button.cget("bg")
+    new_color = "black" if current_color == "white" else "white"
+    button.config(bg=new_color)
+    col = button.grid_info()["column"]
+    Cells.set_cell(0, col, 1 if new_color == "black" else 0)
+
 def main():
     rules = RulesBook.RulesBook()
-    create_gui()  # Start the GUI after other setup
+    max_rows = 35  # Define the maximum number of rows
+    max_cols = 35
+    create_gui(rules, max_rows, max_cols)  # Start the GUI after other setup
 
 main()
 
