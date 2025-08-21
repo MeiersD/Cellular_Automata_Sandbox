@@ -14,10 +14,6 @@ class Cells:
         global grid
         return grid[x][y]
 
-    def update(self):
-        # Implement the logic to update the cell states
-        pass
-
     def set_square_color(self, row: int, col: int, color: str):
         self.bottom_squares[row][col].config(bg=color)
 
@@ -34,8 +30,9 @@ class Cells:
             if next_cell == 1:
                 self.set_square_color(active_row, col, "black")
             next_row.append(next_cell)
+        #append next_row to the grid
+        grid[active_row] = next_row
         active_row += 1
-        print(active_row)
         self.start_simulation(rules)
 
     def do_switch_statement(self, col: int, rules) -> int:

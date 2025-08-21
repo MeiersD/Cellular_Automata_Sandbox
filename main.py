@@ -47,7 +47,7 @@ def create_gui(rules, max_rows: int, max_cols: int):
     for i in range(max_rows):
         row = []
         for j in range(max_cols):
-            square = Frame(bottom_frame, bg="white", width=18, height=18, borderwidth=1, relief="solid")
+            square = Frame(bottom_frame, bg="white", width=10, height=10, borderwidth=1, relief="solid")
             square.grid(row=i, column=j, sticky="nsew")
             # Bind click event for first row
             if i == 0:
@@ -64,7 +64,7 @@ def create_gui(rules, max_rows: int, max_cols: int):
 # The rules can be customized when the user clicks on the corresponding button in the grid
 def determine_square_color(col: int) -> str:
     """Determine the color of the square based on its position."""
-    list_of_black_squares = [5, 10, 13, 14, 19, 21, 23, 25, 26, 29, 30, 31]
+    list_of_black_squares = [5, 10, 13, 14, 19, 21, 23, 25, 26, 29, 30, 31] #DONT TOUCH
     if col in list_of_black_squares:
         return "black"
     return "white"
@@ -98,8 +98,8 @@ def change_color_of_cell(button: Button):
 
 def main():
     rules = RulesBook.RulesBook()
-    max_rows = 35  # Define the maximum number of rows
-    max_cols = 35
+    max_rows = 50  # Define the maximum number of rows
+    max_cols = 80
     create_gui(rules, max_rows, max_cols)  # Start the GUI after other setup
 
 main()
