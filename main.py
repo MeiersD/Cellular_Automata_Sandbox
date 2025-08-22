@@ -2,7 +2,7 @@ from tkinter import *
 import RulesBook
 import Cells
 
-def create_gui(rules, max_rows: int, max_cols: int):
+def create_gui(rules, max_rows: int, max_cols: int, cell_dim: int):
     """Create and run the GUI application"""
     master = Tk()
     master.geometry("600x600")
@@ -47,7 +47,7 @@ def create_gui(rules, max_rows: int, max_cols: int):
     for i in range(max_rows):
         row = []
         for j in range(max_cols):
-            square = Frame(bottom_frame, bg="white", width=10, height=10, borderwidth=1, relief="solid")
+            square = Frame(bottom_frame, bg="white", width=cell_dim, height=cell_dim, borderwidth=1, relief="solid")
             square.grid(row=i, column=j, sticky="nsew")
             # Bind click event for first row
             if i == 0:
@@ -98,9 +98,10 @@ def change_color_of_cell(button: Button):
 
 def main():
     rules = RulesBook.RulesBook()
-    max_rows = 50  # Define the maximum number of rows
+    max_rows = 100  # Define the maximum number of rows
     max_cols = 80
-    create_gui(rules, max_rows, max_cols)  # Start the GUI after other setup
+    cell_dim = 5  # Define the cell dimension
+    create_gui(rules, max_rows, max_cols, cell_dim)  # Start the GUI after other setup
 
 main()
 
