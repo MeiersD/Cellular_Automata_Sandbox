@@ -66,6 +66,14 @@ class Cells:
             case 111:
                 return rules[7]
         return "this will throw an error"
+    
+    def reset_simulation(self):
+        global active_row, grid
+        active_row = 1
+        grid = [[0 for _ in range(max_columns)] for _ in range(max_rows)]
+        for row in self.bottom_squares:
+            for square in row:
+                square.config(bg="white")
 
 def set_cell(x: int, y: int, state: int):
     global grid

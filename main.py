@@ -30,7 +30,9 @@ def create_gui(rules, max_rows: int, max_cols: int, cell_dim: int):
 
     # Add a row for the start button
     start_button = Button(top_frame, text="Start!", bg="green")
-    start_button.grid(row=4, column=0, columnspan=33, sticky="nsew")
+    start_button.grid(row=4, column=0, columnspan=30, sticky="nsew")
+    reset_button = Button(top_frame, text="Reset", bg="red")
+    reset_button.grid(row=4, column=30, columnspan=3, sticky="nsew")
 
     # Make cells expand with window
     for i in range(5):
@@ -57,6 +59,7 @@ def create_gui(rules, max_rows: int, max_cols: int, cell_dim: int):
 
     cells = Cells.Cells(bottom_squares, max_cols, max_rows)
     start_button.config(command=lambda: cells.start_simulation(rules.get_rules()))
+    reset_button.config(command=lambda: cells.reset_simulation())
 
     master.mainloop()
 
